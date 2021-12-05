@@ -17,23 +17,51 @@ import json
 
 from models import NearEarthObject, CloseApproach
 
-# test push!!!!!
 
-def load_neos(neo_csv_path):
+
+def load_neos(neo_csv_path="data/neos.csv"):
     """Read near-Earth object information from a CSV file.
 
     :param neo_csv_path: A path to a CSV file containing data about near-Earth objects.
     :return: A collection of `NearEarthObject`s.
     """
-    # TODO: Load NEO data from the given CSV file.
-    return ()
+    neos = []
+    with open(neo_csv_path) as f:
+        reader = csv.reader(f)
+        for line in reader:
+            designation = line[3]
+            name = line[4]
+            diameter = line[15]
+            hazardous = ''
+            new_inst  = NearEarthObject(designation=designation, name=name, diameter=diameter, hazardous=hazardous)
+            neos.append(new_inst)
+    return neos
 
 
-def load_approaches(cad_json_path):
+def load_approaches(cad_json_path='data/cad.json'):
     """Read close approach data from a JSON file.
 
     :param cad_json_path: A path to a JSON file containing data about close approaches.
     :return: A collection of `CloseApproach`es.
     """
-    # TODO: Load close approach data from the given JSON file.
-    return ()
+    with open(cad_json_path, "r") as f:
+        reader = json.load(f)
+        reader = [dict(zip(reader["fields"], data)) for data in reader["data"]]
+        approaches = []
+        for line in reader:
+            try:
+                designation=line["des"],
+                diameter=line["h"]
+                time=line["cd"],
+                distance=line["dist"],
+                velocity=line["v_rel"]
+                neo = NearEarthObject(designation=designation, diameter=diameter)
+                approach = CloseApproach(NearEarthObject=neo, calendar_date=time, distance=distance, velocity=velocity)
+            except Exception as e:
+                print(e)
+            else:
+                approaches.append(approach)    
+    return approaches
+
+
+load_approaches()
