@@ -55,8 +55,7 @@ def load_approaches(cad_json_path='data/cad.json'):
                 time=line["cd"],
                 distance=line["dist"],
                 velocity=line["v_rel"]
-                neo = NearEarthObject(designation=designation, diameter=diameter)
-                approach = CloseApproach(NearEarthObject=neo, calendar_date=time, distance=distance, velocity=velocity)
+                approach = CloseApproach(designation=designation, calendar_date=time, distance=distance, velocity=velocity)
             except Exception as e:
                 print(e)
             else:

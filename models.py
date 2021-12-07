@@ -39,27 +39,37 @@ class NearEarthObject:
         if not designation:
             self.designation = '' 
         if not isinstance(designation, str):
-            raise TypeError(f"designation must be a str")
+            try:
+                self.designation = str(designation)
+            except:
+                raise TypeError(f"designation must be a str")
         self.designation = designation   
 
-        if not name:
-            self.name = '' 
+        # if not name:
+        #     self.name = '' 
         if not isinstance(name, str):
-            raise TypeError(f"name must be a str")
+            try:
+                self.name = str(name)
+            except:
+                raise TypeError(f"name must be a str")
         self.name = name  
 
         if not diameter:
             self.diameter = float('nan')
         if not isinstance(diameter, float):
             try:
-                float(diameter)
-            except:
-                raise TypeError("diameter must be float")
+                diameter = float(diameter)
+            except Exception as e:
+                print(diameter)
         self.diameter = diameter  
 
+         
         if not isinstance(hazardous, bool):
-            raise TypeError("hazardous must be bool")
-        self.hazardous = hazardous  
+            try:
+                hazardous = bool(hazardous[0])
+            except:
+                print(hazardous)
+        self.hazardous = hazardous 
 
         self.approaches = []
 
@@ -93,29 +103,40 @@ class CloseApproach:
     `NEODatabase` constructor.
     """
 
-    def __init__(self, NearEarthObject, calendar_date, distance, velocity):
+    def __init__(self, designation, calendar_date, distance, velocity):
         
         if not distance:
             self.distance = float('nan')
         if not isinstance(distance, float):
             try:
-                float(distance)
+                distance = float(distance[0])
             except:
-                raise TypeError("distance must be float")
+                print(distance)
+                
         self.distance = distance  
 
         if not velocity:
             self.velocity = float('nan')
         if not isinstance(velocity, float):
             try:
-                float(velocity)
+                velocity = float(velocity[0])
             except:
                 raise TypeError("velocity must be float")
         self.velocity = velocity  
 
-        self._designation = NearEarthObject.designation
+
+        if not designation:
+            self._designation = '' 
+        if not isinstance(designation, str):
+            try:
+                self._designation = str(designation)
+            except:
+                raise TypeError(f"designation must be a str")
+        self._designation = designation   
+
+        calendar_date = str(calendar_date[0])
         self.time = cd_to_datetime(calendar_date)
-        self.neo = NearEarthObject
+        self.neo = None
 
     @property
     def time_str(self):
