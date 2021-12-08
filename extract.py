@@ -25,16 +25,36 @@ def load_neos(neo_csv_path="data/neos.csv"):
     :param neo_csv_path: A path to a CSV file containing data about near-Earth objects.
     :return: A collection of `NearEarthObject`s.
     """
-    neos = []
-    with open(neo_csv_path) as f:
-        reader = csv.reader(f)
+    with open(neo_csv_path, "r") as f:
+        reader = csv.DictReader(f)
+
+        neos = []
         for line in reader:
-            designation = line[3]
-            name = line[4]
-            diameter = line[15]
-            hazardous = ''
-            new_inst  = NearEarthObject(designation=designation, name=name, diameter=diameter, hazardous=hazardous)
-            neos.append(new_inst)
+            # diameter not always available
+            if not line["diameter"]:
+                line["diameter"] = None
+            else:
+                line["diameter"] = float(line["diameter"])
+
+            if not line["name"]:
+                line["name"] = None
+
+            line["pha"] = False if line["pha"] in ["N", ""] else True
+
+            try:
+                neo = NearEarthObject(
+                    pdes=line["pdes"],
+                    name=line["name"],
+                    diameter=line["diameter"],
+                    pha=line["pha"],
+                )
+
+            except Exception as e:
+                print(e)
+                continue
+
+            neos.append(neo)
+
     return neos
 
 
@@ -47,20 +67,19 @@ def load_approaches(cad_json_path='data/cad.json'):
     with open(cad_json_path, "r") as f:
         reader = json.load(f)
         reader = [dict(zip(reader["fields"], data)) for data in reader["data"]]
-        approaches = []
+
+        close_approaches = []
         for line in reader:
             try:
-                designation=line["des"],
-                diameter=line["h"]
-                time=line["cd"],
-                distance=line["dist"],
-                velocity=line["v_rel"]
-                approach = CloseApproach(designation=designation, calendar_date=time, distance=distance, velocity=velocity)
+                ca = CloseApproach(
+                    des=line["des"],
+                    cd=line["cd"],
+                    dist=float(line["dist"]),
+                    v_rel=float(line["v_rel"]),
+                )
             except Exception as e:
                 print(e)
-            else:
-                approaches.append(approach)    
-    return approaches
+                continue
+            close_approaches.append(ca)
 
-
-load_approaches()
+    return close_approaches
