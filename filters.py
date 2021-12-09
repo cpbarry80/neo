@@ -108,8 +108,18 @@ def create_filters(
     :param hazardous: Whether the NEO of a matching `CloseApproach` is potentially hazardous.
     :return: A collection of filters for use with `query`.
     """
-    # TODO: Decide how you will represent your filters.
-    return ()
+
+    collection_of_attribute_filters = []
+    for varname in create_filters.__code__.co_varnames:
+        if varname == hazardous:
+            collection_of_attribute_filters.append(AttributeFilter(op, varname))
+        if varname[-3:] == "min" and varname is not None:
+            collection_of_attribute_filters.append(AttributeFilter(operator.ge, varname))
+        if varname[-3:] == "max" and varname is not None:
+            collection_of_attribute_filters.append(AttributeFilter(operator.le, varname))
+    
+    return collection_of_attribute_filters
+
 
 
 def limit(iterator, n=None):
