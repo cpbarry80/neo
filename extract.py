@@ -28,33 +28,21 @@ def load_neos(neo_csv_path="data/neos.csv"):
     """
     with open(neo_csv_path, "r") as f:
         reader = csv.DictReader(f)
-
         neos = []
         for line in reader:
-            # diameter not always available
             if not line["diameter"]:
                 line["diameter"] = None
             else:
                 line["diameter"] = float(line["diameter"])
-
             if not line["name"]:
                 line["name"] = None
-
             line["pha"] = False if line["pha"] in ["N", ""] else True
-
-            try:
-                neo = NearEarthObject(
-                    pdes=line["pdes"],
-                    name=line["name"],
-                    diameter=line["diameter"],
-                    pha=line["pha"],)
-
-            except Exception as e:
-                print(e)
-                continue
-
+            neo = NearEarthObject(
+                pdes=line["pdes"],
+                name=line["name"],
+                diameter=line["diameter"],
+                pha=line["pha"])
             neos.append(neo)
-
     return neos
 
 
@@ -67,19 +55,12 @@ def load_approaches(cad_json_path='data/cad.json'):
     with open(cad_json_path, "r") as f:
         reader = json.load(f)
         reader = [dict(zip(reader["fields"], data)) for data in reader["data"]]
-
         close_approaches = []
         for line in reader:
-            try:
-                ca = CloseApproach(
-                    des=line["des"],
-                    cd=line["cd"],
-                    dist=float(line["dist"]),
-                    v_rel=float(line["v_rel"]),
-                )
-            except Exception as e:
-                print(e)
-                continue
-            close_approaches.append(ca)
-
+            appraoch = CloseApproach(
+                designation=line["des"],
+                time=line["cd"],
+                distance=line["dist"],
+                velocity=line["v_rel"])
+            close_approaches.append(appraoch)
     return close_approaches

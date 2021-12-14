@@ -12,6 +12,7 @@ You'll edit this file in Part 4.
 """
 import csv
 import json
+from helpers import datetime_to_str
 
 
 def write_to_csv(results, filename):
@@ -35,7 +36,7 @@ def write_to_csv(results, filename):
         writer.writeheader()
 
         for result in results:
-            dict_appraoch = result.__dict__
+            dict_appraoch = vars(result)
             try:
                 dict_appraoch["name"]
             except KeyError:
@@ -66,24 +67,34 @@ def write_to_json(results, filename):
     :param filename: A Path-like object pointing to where the data
     should be saved.
     """
-    data = []
+    json_data = []
     for result in results:
-        info = {**result.serialize(), **result.neo.serialize()}
-        info["name"] = info["name"] if info["name"] is not None else ""
-        if info["potentially_hazardous"]:
-            info["potentially_hazardous"] = bool(1)
+        dict_appraoch = vars(result)
+        dict_neo = vars(result.neo)
+        try:
+            dict_appraoch["name"]
+        except KeyError:
+            dict_appraoch["name"] = ""
+        try:
+            dict_appraoch["potentially_hazardous"]
+        except KeyError:
+            dict_appraoch["potentially_hazardous"] = "False"
         else:
-            info["potentially_hazardous"] = bool(0)
-        data.append(
-            {"datetime_utc": info["datetime_utc"],
-                "distance_au": info["distance_au"],
-                "velocity_km_s": info["velocity_km_s"],
+            dict_appraoch["potentially_hazardous"] = "True"
+        dict_appraoch["distance_au"] = dict_appraoch.pop("distance")
+        dict_appraoch["velocity_km_s"] = dict_appraoch.pop("velocity")
+        dict_appraoch["datetime_utc"] = dict_appraoch.pop("time")
+
+        json_data.append(
+            {"datetime_utc": datetime_to_str(dict_appraoch["datetime_utc"]),
+                "distance_au": dict_appraoch["distance_au"],
+                "velocity_km_s": dict_appraoch["velocity_km_s"],
                 "neo": {
-                    "designation": info["designation"],
-                    "name": info["name"],
-                    "diameter_km": info["diameter_km"],
-                    "potentially_hazardous": info["potentially_hazardous"]
+                    "designation": dict_neo["designation"],
+                    "name": dict_neo["name"],
+                    "diameter_km": dict_neo["diameter"],
+                    "potentially_hazardous": dict_neo["hazardous"]
                     }})
 
     with open(filename, "w") as outfile:
-        json.dump(data, outfile, indent="\t")
+        json.dump(json_data, outfile, indent="\t")

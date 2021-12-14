@@ -18,7 +18,6 @@ quirks of the data set, such as missing names and unknown diameters.
 You'll edit this file in Task 1.
 """
 from helpers import cd_to_datetime, datetime_to_str
-import math
 import datetime
 
 
@@ -68,18 +67,6 @@ class NearEarthObject:
             f"diameter={self.diameter:.3f}, hazardous={self.hazardous!r})"
         )
 
-    def serialize(self):
-        """Return a dict representation of self attributes.
-
-        Returns:
-            [dict]: Keys associated with self attributes.
-        """
-        return {
-            "designation": self.designation,
-            "name": self.name,
-            "diameter_km": self.diameter,
-            "potentially_hazardous": self.hazardous,
-        }
 
 
 class CloseApproach:
@@ -101,18 +88,10 @@ class CloseApproach:
 
         :param info: A dictionary of excess keyword arguments supplied to the constructor.
         """
-        self._designation = info.get("des", None)
-        self.time = info.get("cd", None)
-        if self.time:
-            self.time = cd_to_datetime(self.time)
-            assert isinstance(
-                self.time, datetime.datetime
-            ), "Date should be a datetime object"
-        self.distance = info.get("dist", float("nan"))
-        self.velocity = info.get("v_rel", float("nan"))
-
-        assert isinstance(self.distance, float), "Distance should be a float"
-        assert isinstance(self.velocity, float), "Velocity should be a float"
+        self._designation = info["designation"]
+        self.time = cd_to_datetime(info["time"])
+        self.distance = float(info.get("distance", "nan"))
+        self.velocity = float(info.get("velocity", "nan"))
 
         # Create an attribute for the referenced NEO, originally None.
         self.neo = info.get("neo", None)
@@ -143,9 +122,9 @@ class CloseApproach:
 
     def __str__(self):
         """Return `str(self)`."""
-        return f"At {self.time_str}, '{self.neo.fullname}' approaches \
-            Earth at a distance of {self.distance:.2f} au and a velocity of \
-                {self.velocity:.2f} km/s."
+        return f"At {self.time_str}, '{self.neo.fullname}' approached \
+            Earth at a distance of {self.distance} au and a velocity of \
+                {self.velocity} km/s."
 
     def __repr__(self):
         """Return `repr(self)`, a computer-readable string representation of this object."""
@@ -154,15 +133,3 @@ class CloseApproach:
             distance={self.distance:.2f}, "
             f"velocity={self.velocity:.2f}, neo={self.neo!r})"
         )
-
-    def serialize(self):
-        """Return a dict representation of self attributes.
-
-        Returns:
-            [dict]: Keys associated with self attributes.
-        """
-        return {
-            "datetime_utc": datetime_to_str(self.time),
-            "distance_au": self.distance,
-            "velocity_km_s": self.velocity,
-        }
