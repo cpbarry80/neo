@@ -30,17 +30,28 @@ def write_to_csv(results, filename):
         'designation', 'name', 'diameter_km', 'potentially_hazardous'
     )
 
-    with open(filename, "w", newline="") as outfile:
-        writer = csv.DictWriter(outfile, fieldnames=fieldnames)
+    with open(filename, "w", newline="") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
+
         for result in results:
-            info = {**result.serialize(), **result.neo.serialize()}
-            info["name"] = info["name"] if info["name"] is not None else ""
-            if info["potentially_hazardous"]:
-                info["potentially_hazardous"] = "True"
+            dict_appraoch = result.__dict__
+            try:
+                dict_appraoch["name"]
+            except KeyError:
+                dict_appraoch["name"] = ""
+            try:
+                dict_appraoch["potentially_hazardous"]
+            except KeyError:
+                dict_appraoch["potentially_hazardous"] = "False"
             else:
-                info["potentially_hazardous"] = "False"
-            writer.writerow(info)
+                dict_appraoch["potentially_hazardous"] = "True"
+            dict_appraoch["designation"] = dict_appraoch.pop("_designation")
+            dict_appraoch["velocity_km_s"] = dict_appraoch.pop("velocity")
+            dict_appraoch["datetime_utc"] = dict_appraoch.pop("time")
+            dict_appraoch["name"] = dict_appraoch.pop("neo")
+            dict_appraoch["distance_au"] = dict_appraoch.pop("distance")
+            writer.writerow(dict_appraoch)
 
 
 def write_to_json(results, filename):

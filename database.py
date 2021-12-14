@@ -45,10 +45,12 @@ class NEODatabase:
         self.approaches = approaches
         self._approaches = {}
         for approach in approaches:
-            if self._approaches.get(approach.designation, None):
-                self._approaches[approach.designation].append(approach)
-            else:
+            try:
+                self._approaches[approach.designation]
+            except KeyError:
                 self._approaches[approach.designation] = [approach]
+            else:
+                self._approaches[approach.designation].append(approach)
             for a in self._approaches[approach.designation]:
                 a.neo = self._neos[approach.designation]
             self._neos[approach.designation].approaches.append(approach)
