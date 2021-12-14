@@ -54,18 +54,11 @@ class NearEarthObject:
     @property
     def fullname(self):
         """Return a representation of the full name of this NEO."""
-        if self.name:
-            return f"{self.designation} ({self.name})"
-        return self.designation
+        return f"{self.designation}, {self.name}"
 
     def __str__(self):
         """Return `str(self)`."""
-        is_hazardous = "is" if self.hazardous else "is not"
-        if not math.isnan(self.diameter):
-            return f"NEO {self.fullname} has a diameter of \
-                {self.diameter:.3f} km and {is_hazardous} \
-                potentially hazardous."
-        return f"NEO {self.fullname}, {is_hazardous} potentially hazardous."
+        return f'NEO {self.fullname} has a diameter of {self.diameter:.3f} km and potentially hazardous is {self.hazardous}.'
 
     def __repr__(self):
         """Return `repr(self)`, a computer-readable string representation of this object."""
@@ -111,7 +104,6 @@ class CloseApproach:
         self._designation = info.get("des", None)
         self.time = info.get("cd", None)
         if self.time:
-            # print(type(self.time))
             self.time = cd_to_datetime(self.time)
             assert isinstance(
                 self.time, datetime.datetime

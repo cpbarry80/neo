@@ -21,7 +21,7 @@ class NEODatabase:
     help fetch NEOs by primary designation or by name and to help speed up
     querying for close approaches that match criteria.
     """
-    
+
     def __init__(self, neos, approaches):
         """Create a new `NEODatabase`.
 
@@ -40,13 +40,9 @@ class NEODatabase:
         :param neos: A collection of `NearEarthObject`s.
         :param approaches: A collection of `CloseApproach`es.
         """
-        self.approaches = approaches
-
         self._neos = {neo.designation: neo for neo in neos}
-        # for get_neo_by_name
-        # names are not always present (the '' key will not be unique),
-        # but this is not a restriction because it will only be used for a name that the user provides
         self._name_to_des = {neo.name: neo.designation for neo in neos}
+        self.approaches = approaches
         self._approaches = {}
         for approach in approaches:
             if self._approaches.get(approach.designation, None):
