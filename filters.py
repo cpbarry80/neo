@@ -39,6 +39,7 @@ class AttributeFilter:
     Concrete subclasses can override the `get` classmethod to provide custom
     behavior to fetch a desired attribute from the given `CloseApproach`.
     """
+
     def __init__(self, op, value):
         """Construct a new `AttributeFilter` from an binary predicate and a reference value.
 
@@ -70,13 +71,17 @@ class AttributeFilter:
         raise UnsupportedCriterionError
 
     def __repr__(self):
+        """Check out for __repr__."""
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
 
 class DateFilter(AttributeFilter):
+    """Filter for DistanceFilter."""
+
     @classmethod
     def get(cls, approach):
-        """
+        """Get DateFilter.
+
         param: approach a CloseApproach object.
         return: [datetime.datetime]: Converted time to datetime object.
         """
@@ -84,9 +89,12 @@ class DateFilter(AttributeFilter):
 
 
 class DistanceFilter(AttributeFilter):
+    """Filter for DistanceFilter."""
+   
     @classmethod
     def get(cls, approach):
-        """
+        """Get DistanceFilter.
+
         param: approach a CloseApproach object.
         return: [float]: Returns the distance of a CloseApproach.
         """
@@ -94,9 +102,12 @@ class DistanceFilter(AttributeFilter):
 
 
 class VelocityFilter(AttributeFilter):
+    """Filter for VelocityFilter."""
+
     @classmethod
     def get(cls, approach):
-        """
+        """Get VelocityFilter.
+
         param: approach a CloseApproach object.
         return: [float]: Returns the velocity of a CloseApproach.
         """
@@ -104,9 +115,12 @@ class VelocityFilter(AttributeFilter):
 
 
 class DiameterFilter(AttributeFilter):
+    """Filter for DiameterFilter."""
+
     @classmethod
     def get(cls, approach):
-        """
+        """Get DiameterFilter.
+
         param: approach a CloseApproach object.
         return: [float]: Returns the diameter of a NearEarthObject object.
         """
@@ -114,9 +128,12 @@ class DiameterFilter(AttributeFilter):
 
 
 class HazardousFilter(AttributeFilter):
+    """Filter for hazardous."""
+
     @classmethod
     def get(cls, approach):
-        """
+        """Get HazardousFilter.
+
         param: approach a CloseApproach object.
         return: [float]: Returns the hazardous attribute of a NearEarthObject object.
         """
@@ -159,7 +176,6 @@ def create_filters(
     :param hazardous: Whether the NEO of a matching `CloseApproach` is potentially hazardous.
     :return: A collection of filters for use with `query`.
     """
-
     collection_of_attribute_filters = {}
     if date:
         collection_of_attribute_filters["date"] = DateFilter(operator.eq, date)
@@ -190,7 +206,6 @@ def limit(iterator, n=None):
     """Produce a limited stream of values from an iterator.
 
     If `n` is 0 or None, don't limit the iterator at all.
-
     :param iterator: An iterator of values.
     :param n: The maximum number of values to produce.
     :yield: The first (at most) `n` values from the iterator.

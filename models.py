@@ -127,7 +127,7 @@ class CloseApproach:
 
     @property
     def designation(self):
-        """Get designation
+        """Get designation.
 
         Returns:
             [str]: Returns self._designation

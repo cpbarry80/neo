@@ -22,7 +22,7 @@ The `query` subcommand searches for close approaches that match given criteria:
     $ python3 main.py query --date 2020-03-14 --max-velocity 25 --min-diameter 0.5 --hazardous
     $ python3 main.py query --start-date 2000-01-01 --max-diameter 0.1 --not-hazardous
     $ python3 main.py query --hazardous --max-distance 0.05 --min-velocity 30
-
+    
 The set of results can be limited in size and/or saved to an output file in CSV
 or JSON format:
 
@@ -246,6 +246,7 @@ class NEOShell(cmd.Cmd):
     inspect and query commands, while only loading the data (which can be quite
     slow) once.
     """
+    
     intro = ("Explore close approaches of near-Earth objects. "
              "Type `help` or `?` to list commands and `exit` to exit.\n")
     prompt = '(neo) '
