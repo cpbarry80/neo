@@ -90,7 +90,7 @@ class DateFilter(AttributeFilter):
 
 class DistanceFilter(AttributeFilter):
     """Filter for DistanceFilter."""
-   
+
     @classmethod
     def get(cls, approach):
         """Get DistanceFilter.
@@ -197,9 +197,8 @@ def create_filters(
         collection_of_attribute_filters["diameter_max"] = DiameterFilter(operator.le, diameter_max)
     if hazardous is not None:
         collection_of_attribute_filters["hazardous"] = HazardousFilter(operator.eq, hazardous)
-    
-    return collection_of_attribute_filters
 
+    return collection_of_attribute_filters
 
 
 def limit(iterator, n=None):
