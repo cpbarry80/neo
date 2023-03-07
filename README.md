@@ -28,3 +28,10 @@ Write Python functions to transform data and perform algorithms.
 Design Python classes to encapsulate useful data types.
 Provide interface abstractions for complex implementations.
 It's normal to encounter bugs along the way, so in all likelihood, you'll also gain practice with valuable debugging skills, whether interpreting stack traces, chasing down system errors, handling and raising appropriate errors, walking through code with pdb, checking preconditions with assert, or simply displaying internal state with print.
+
+
+
+
+Intermediate Python Nanodegree program from Udacity
+https://graduation.udacity.com/nd303
+
