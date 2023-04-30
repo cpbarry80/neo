@@ -33,5 +33,4 @@ It's normal to encounter bugs along the way, so in all likelihood, you'll also g
 
 
 # Intermediate Python Nanodegree program from Udacity
-https://graduation.udacity.com/nd303
-
+confirm.udacity.com/TJPXSDUV
